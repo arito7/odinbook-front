@@ -1,23 +1,59 @@
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+import { useState } from 'react';
+import User from './components/User';
 
 function App() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
+
+  axios.defaults.baseURL = 'http://localhost:5000';
+
+  const onLogin = () => {
+    axios.post('/users/login', { username, password }).then((res) => {
+      console.log(res.data);
+      if (res.data.success && localStorage) {
+        console.log('saving token to localstorage');
+        localStorage.setItem('token', res.data.token);
+        setUser(res.data.user);
+      }
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <form action="">
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          name="username"
+          id="username"
+          value={username}
+          onChange={(e) => {
+            setUsername(e.target.value);
+          }}
+        />
+        <label htmlFor="password">Password</label>
+        <input
+          type="text"
+          name="password"
+          id="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
+        <button
+          type="button"
+          onClick={() => {
+            onLogin();
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          Login
+        </button>
+      </form>
+      {user ? <User user={user} /> : null}
     </div>
   );
 }
