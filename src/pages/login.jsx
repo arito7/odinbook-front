@@ -34,9 +34,11 @@ const Login = () => {
         inputMode="password"
       />
       <Button sx={{ padding: '.5rem' }} variant="contained">
-        <Typography variant="subtitle2">Login with a Test Account</Typography>
+        <Typography variant="subtitle2">Login</Typography>
       </Button>
+
       <Divider>or</Divider>
+
       <Button
         className="text-btn"
         variant="contained"
@@ -54,6 +56,12 @@ const Login = () => {
           Sign up here!
         </Link>
       </Typography>
+
+      <Divider>or</Divider>
+
+      <Button sx={{ padding: '.5rem' }} variant="contained">
+        <Typography variant="subtitle2">Login with a Test Account</Typography>
+      </Button>
     </Box>
   );
 };
