@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { green, purple } from '@mui/material/colors';
+import { green, purple, pink } from '@mui/material/colors';
 import Login from './pages/login';
 import NotFound from './pages/notfound';
 import Register from './pages/register';
@@ -15,10 +15,10 @@ import { AuthProvider, RequireAuth } from './contexts/AuthContext';
 const theme = createTheme({
   palette: {
     primary: {
-      main: purple[500],
+      main: pink[500],
     },
     secondary: {
-      main: green[500],
+      main: purple[500],
     },
   },
   typography: {
