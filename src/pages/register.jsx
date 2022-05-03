@@ -6,45 +6,47 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
-
+import * as Yup from 'yup';
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/system';
+import { useFormik } from 'formik';
 
 const Register = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [usernameError, setUsernameError] = useState('');
 
-  const onSignup = () => {
-    if (usernameError) {
-      return;
-    }
-    if (!username) {
-      setUsernameError('Username cannot be empty.');
-      return;
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      password: '',
+      rpassword: '',
+    },
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .min(6, 'Username must be at least 6 characters long.')
+        .max(20, 'Username is too long.')
+        .matches(
+          /^[a-z0-9]+$/i,
+          'Username cannot consist of non-alphanumeric characters.'
+        )
+        .required('Username is required'),
+      password: Yup.string()
+        .min(6, 'Password must be at least 6 characters long.')
+        .max(20, 'Password is too long.')
+        .required('Password is required'),
+      rpassword: Yup.string().when('password', {
+        is: (val) => (val && val.length > 0 ? true : false),
+        then: Yup.string().oneOf([Yup.ref('password')], 'Passwords must match'),
+      }),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
 
   const onLoginRedirect = () => {
     navigate('/login');
-  };
-
-  const onUsernameChange = (e) => {
-    setUsername(e.target.value);
-    if (e.target.value.length < 7) {
-      setUsernameError(
-        'Username must be at least 6 alphanumeric characters long.'
-      );
-      // check for non alpha numeric characters
-    } else if (!/^[a-z0-9]+$/.test(e.target.value)) {
-      setUsernameError(
-        'Username cannot consist of non-alphanumeric characters.'
-      );
-    } else if (e.target.value.length > 19) {
-      setUsernameError('Username is too long!');
-    } else setUsernameError('');
   };
 
   return (
@@ -61,17 +63,19 @@ const Register = () => {
         Signup Page
       </Typography>
       <Paper
-        elevation={1}
+        variation="outline"
         sx={{
           padding: '1rem',
-          backgroundColor: theme.palette.secondary.dark,
-          color: theme.palette.secondary.contrastText,
         }}
       >
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
           Join the lovely community and interact with{' '}
           <Typography
-            sx={{ textAlign: 'center', fontWeight: 'bold' }}
+            sx={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+              color: theme.palette.secondary.main,
+            }}
             variant="body1"
             component="span"
           >
@@ -81,20 +85,39 @@ const Register = () => {
         </Typography>
       </Paper>
       <TextField
+        id="username"
         label="Username"
         placeholder="Username"
-        error={usernameError}
-        value={username}
-        onChange={onUsernameChange}
-        helperText={usernameError}
+        error={formik.errors.username}
+        value={formik.values.username}
+        onChange={formik.handleChange}
+        helperText={formik.errors.username}
       />
-      <TextField label="Password" placeholder="Password" type="password" />
       <TextField
+        id="password"
+        label="Password"
+        placeholder="Password"
+        type="password"
+        value={formik.values.password}
+        onChange={formik.handleChange}
+        error={formik.errors.password}
+        helperText={formik.errors.password}
+      />
+      <TextField
+        id="rpassword"
+        value={formik.values.rpassword}
+        onChange={formik.handleChange}
+        error={formik.errors.rpassword}
+        helperText={formik.errors.rpassword}
         label="Repeat Password"
         placeholder="Repeat Password"
         type="password"
       />
-      <Button onClick={onSignup} variant="outlined" sx={{ padding: '.5rem' }}>
+      <Button
+        onClick={formik.handleSubmit}
+        variant="outlined"
+        sx={{ padding: '.5rem' }}
+      >
         Sign up
       </Button>
 
