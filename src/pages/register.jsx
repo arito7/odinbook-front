@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -14,9 +14,37 @@ import { useTheme } from '@mui/system';
 const Register = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [usernameError, setUsernameError] = useState('');
 
-  const handleClick = () => {
+  const onSignup = () => {
+    if (usernameError) {
+      return;
+    }
+    if (!username) {
+      setUsernameError('Username cannot be empty.');
+      return;
+    }
+  };
+
+  const onLoginRedirect = () => {
     navigate('/login');
+  };
+
+  const onUsernameChange = (e) => {
+    setUsername(e.target.value);
+    if (e.target.value.length < 7) {
+      setUsernameError(
+        'Username must be at least 6 alphanumeric characters long.'
+      );
+      // check for non alpha numeric characters
+    } else if (!/^[a-z0-9]+$/.test(e.target.value)) {
+      setUsernameError(
+        'Username cannot consist of non-alphanumeric characters.'
+      );
+    } else if (e.target.value.length > 19) {
+      setUsernameError('Username is too long!');
+    } else setUsernameError('');
   };
 
   return (
@@ -52,14 +80,21 @@ const Register = () => {
           of other beautiful people.
         </Typography>
       </Paper>
-      <TextField label="Username" placeholder="Username" />
+      <TextField
+        label="Username"
+        placeholder="Username"
+        error={usernameError}
+        value={username}
+        onChange={onUsernameChange}
+        helperText={usernameError}
+      />
       <TextField label="Password" placeholder="Password" type="password" />
       <TextField
         label="Repeat Password"
         placeholder="Repeat Password"
         type="password"
       />
-      <Button variant="outlined" sx={{ padding: '.5rem' }}>
+      <Button onClick={onSignup} variant="outlined" sx={{ padding: '.5rem' }}>
         Sign up
       </Button>
 
@@ -74,7 +109,7 @@ const Register = () => {
 
       <Typography sx={{ textAlign: 'center' }}>
         Already a member?
-        <Link onClick={handleClick} variant="body1" underline="hover">
+        <Link onClick={onLoginRedirect} variant="body1" underline="hover">
           {' '}
           Login
         </Link>
