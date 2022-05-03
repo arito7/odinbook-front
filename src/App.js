@@ -12,15 +12,10 @@ import Register from './pages/register';
 const theme = createTheme({
   palette: {
     primary: {
-      main: purple,
+      main: purple[500],
     },
     secondary: {
-      main: green,
-    },
-  },
-  spacing: {
-    button: {
-      padding: '1rem',
+      main: green[500],
     },
   },
   typography: {

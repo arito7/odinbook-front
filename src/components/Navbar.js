@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
@@ -6,8 +6,14 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
 const Navbar = () => {
+  const [drawerVisibile, setDrawerVisible] = useState(false);
+
+  const handleMenuClick = () => {
+    setDrawerVisible(true);
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -17,6 +23,7 @@ const Navbar = () => {
             edge="start"
             color="inherit"
             aria-label="menu"
+            onClick={handleMenuClick}
             sx={{ marginRight: 2 }}
           >
             <MenuIcon />
@@ -27,6 +34,15 @@ const Navbar = () => {
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
+
+      <SwipeableDrawer
+        anchor={'left'}
+        open={drawerVisibile}
+        onClose={() => setDrawerVisible(false)}
+        onOpen={() => console.log('on open')}
+      >
+        <Typography>SwipeableDrawer a;lksjdf;lakjsdf;lajsdl;f</Typography>
+      </SwipeableDrawer>
     </Box>
   );
 };
