@@ -8,3 +8,4 @@ Created using react with MUI
 - [ ] Add emoji support for post
 - [ ] Add images/file support for post
 - [ ] Add chat support
+- [ ] Add notifications
