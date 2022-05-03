@@ -9,6 +9,7 @@ import Login from './pages/login';
 import NotFound from './pages/notfound';
 import Register from './pages/register';
 import Home from './pages/home';
+import Friends from './pages/friends';
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/friends" element={<Friends />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
