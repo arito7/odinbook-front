@@ -10,6 +10,7 @@ import NotFound from './pages/notfound';
 import Register from './pages/register';
 import Home from './pages/home';
 import Friends from './pages/friends';
+import { AuthProvider, RequireAuth } from './contexts/AuthContext';
 
 const theme = createTheme({
   palette: {
@@ -28,15 +29,31 @@ const theme = createTheme({
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/friends" element={<Friends />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <Home />
+                </RequireAuth>
+              }
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/friends"
+              element={
+                <RequireAuth>
+                  <Friends />
+                </RequireAuth>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
