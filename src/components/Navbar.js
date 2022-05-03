@@ -23,6 +23,30 @@ import {
 
 const Navbar = () => {
   const [drawerVisibile, setDrawerVisible] = useState(false);
+  const globalItems = [
+    {
+      label: 'Home',
+      iconElement: <HomeRounded />,
+    },
+    {
+      label: 'Messages',
+      iconElement: <MessageRounded />,
+    },
+    {
+      label: 'Friends',
+      iconElement: <People />,
+    },
+  ];
+  const accItems = [
+    {
+      label: 'Account',
+      iconElement: <Person />,
+    },
+    {
+      label: 'Settings',
+      iconElement: <Settings />,
+    },
+  ];
 
   const handleMenuClick = () => {
     setDrawerVisible(true);
@@ -50,7 +74,7 @@ const Navbar = () => {
 
       <SwipeableDrawer
         anchor={'left'}
-        open={true}
+        open={drawerVisibile}
         onClose={() => setDrawerVisible(false)}
         onOpen={() => console.log('on open')}
       >
@@ -66,51 +90,17 @@ const Navbar = () => {
           <Divider sx={{ marginBottom: '1rem' }} />
           <nav>
             <List sx={{ display: 'grid' }}>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <HomeRounded />
-                  </ListItemIcon>
-                  <ListItemText primary="Home" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <MessageRounded />
-                  </ListItemIcon>
-                  <ListItemText primary="Messages" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <People />
-                  </ListItemIcon>
-                  <ListItemText primary="Friends" />
-                </ListItemButton>
-              </ListItem>
+              {globalItems.map((i) => (
+                <DrawerItem label={i.label} iconElement={i.iconElement} />
+              ))}
             </List>
           </nav>
           <Divider />
           <nav>
             <List sx={{ display: 'grid' }}>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <Person />
-                  </ListItemIcon>
-                  <ListItemText primary="Account" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <Settings />
-                  </ListItemIcon>
-                  <ListItemText primary="Settings" />
-                </ListItemButton>
-              </ListItem>
+              {accItems.map((i) => (
+                <DrawerItem label={i.label} iconElement={i.iconElement} />
+              ))}
             </List>
           </nav>
         </Box>
@@ -119,4 +109,14 @@ const Navbar = () => {
   );
 };
 
+const DrawerItem = ({ label, iconElement }) => {
+  return (
+    <ListItem disablePadding>
+      <ListItemButton>
+        <ListItemIcon>{iconElement}</ListItemIcon>
+        <ListItemText primary={label} />
+      </ListItemButton>
+    </ListItem>
+  );
+};
 export default Navbar;
