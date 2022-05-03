@@ -7,6 +7,19 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import Divider from '@mui/material/Divider';
+import {
+  HomeRounded,
+  MessageRounded,
+  People,
+  Person,
+  Settings,
+} from '@mui/icons-material';
 
 const Navbar = () => {
   const [drawerVisibile, setDrawerVisible] = useState(false);
@@ -37,11 +50,70 @@ const Navbar = () => {
 
       <SwipeableDrawer
         anchor={'left'}
-        open={drawerVisibile}
+        open={true}
         onClose={() => setDrawerVisible(false)}
         onOpen={() => console.log('on open')}
       >
-        <Typography>SwipeableDrawer a;lksjdf;lakjsdf;lajsdl;f</Typography>
+        <Box
+          sx={{
+            width: '85vw',
+            maxWidth: 320,
+          }}
+        >
+          <Typography variant="h5" sx={{ padding: '1rem' }}>
+            Social App
+          </Typography>
+          <Divider sx={{ marginBottom: '1rem' }} />
+          <nav>
+            <List sx={{ display: 'grid' }}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <HomeRounded />
+                  </ListItemIcon>
+                  <ListItemText primary="Home" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <MessageRounded />
+                  </ListItemIcon>
+                  <ListItemText primary="Messages" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <People />
+                  </ListItemIcon>
+                  <ListItemText primary="Friends" />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </nav>
+          <Divider />
+          <nav>
+            <List sx={{ display: 'grid' }}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText primary="Account" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <Settings />
+                  </ListItemIcon>
+                  <ListItemText primary="Settings" />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </nav>
+        </Box>
       </SwipeableDrawer>
     </Box>
   );
