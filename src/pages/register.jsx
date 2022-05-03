@@ -9,8 +9,10 @@ import Paper from '@mui/material/Paper';
 
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/system';
 
 const Register = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -30,12 +32,18 @@ const Register = () => {
       <Typography sx={{ textAlign: 'center' }} variant="h4">
         Signup Page
       </Typography>
-      <Paper color="secondary" elevation={1} sx={{ padding: '1rem' }}>
+      <Paper
+        elevation={1}
+        sx={{
+          padding: '1rem',
+          backgroundColor: theme.palette.secondary.dark,
+          color: theme.palette.secondary.contrastText,
+        }}
+      >
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
           Join the lovely community and interact with{' '}
           <Typography
-            sx={{ textAlign: 'center' }}
-            color="secondary"
+            sx={{ textAlign: 'center', fontWeight: 'bold' }}
             variant="body1"
             component="span"
           >
