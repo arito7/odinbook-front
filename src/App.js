@@ -8,6 +8,7 @@ import { green, purple } from '@mui/material/colors';
 import Login from './pages/login';
 import NotFound from './pages/notfound';
 import Register from './pages/register';
+import Home from './pages/home';
 
 const theme = createTheme({
   palette: {
@@ -28,6 +29,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound />} />
