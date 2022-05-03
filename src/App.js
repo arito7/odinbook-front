@@ -1,61 +1,47 @@
 import './App.css';
-import axios from 'axios';
-import { useState } from 'react';
-import User from './components/User';
+import React from 'react';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { green, purple } from '@mui/material/colors';
+import Login from './pages/login';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: purple[600],
+    },
+    secondary: {
+      main: green[500],
+    },
+  },
+});
 
 function App() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
-
-  axios.defaults.baseURL = 'http://localhost:5000';
-
-  const onLogin = () => {
-    axios.post('/users/login', { username, password }).then((res) => {
-      console.log(res.data);
-      if (res.data.success && localStorage) {
-        console.log('saving token to localstorage');
-        localStorage.setItem('token', res.data.token);
-        setUser(res.data.user);
-      }
-    });
-  };
-
   return (
-    <div className="App">
-      <form action="">
-        <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value);
-          }}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          type="text"
-          name="password"
-          id="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-        />
-        <button
-          type="button"
-          onClick={() => {
-            onLogin();
-          }}
-        >
-          Login
-        </button>
-      </form>
-      {user ? <User user={user} /> : null}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+const Layout = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box>
+        <Navbar />
+        <Outlet />
+      </Box>
+    </ThemeProvider>
+  );
+};
 
 export default App;
