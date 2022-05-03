@@ -7,16 +7,19 @@ import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, purple } from '@mui/material/colors';
 import Login from './pages/login';
+import NotFound from './pages/notfound';
 
 const theme = createTheme({
   palette: {
-    mode: 'dark',
     primary: {
       main: purple[600],
     },
     secondary: {
       main: green[500],
     },
+  },
+  typography: {
+    fontFamily: 'Ubuntu',
   },
 });
 
@@ -26,6 +29,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
