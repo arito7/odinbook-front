@@ -1,4 +1,3 @@
-import './App.css';
 import React from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -8,14 +7,20 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, purple } from '@mui/material/colors';
 import Login from './pages/login';
 import NotFound from './pages/notfound';
+import Register from './pages/register';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: purple[600],
+      main: purple,
     },
     secondary: {
-      main: green[500],
+      main: green,
+    },
+  },
+  spacing: {
+    button: {
+      padding: '1rem',
     },
   },
   typography: {
@@ -29,6 +34,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
