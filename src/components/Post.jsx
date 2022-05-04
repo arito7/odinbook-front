@@ -11,6 +11,7 @@ import {
   Divider,
   Typography,
 } from '@mui/material';
+import moment from 'moment';
 
 export const Post = ({ post }) => (
   <Paper sx={{ p: '1rem', position: 'relative', display: 'grid' }}>
@@ -25,16 +26,18 @@ export const Post = ({ post }) => (
     >
       <Avatar alt="Test icon" src="/images/man.png" />
       <Box sx={{ display: 'grid', alignItems: 'center' }}>
-        <Typography>{post.username}</Typography>
+        <Typography>{post.creator.username}</Typography>
         <Typography variant="subtitle2" color="grey">
-          {post.date}
+          {moment(post.createdAt).fromNow()}
         </Typography>
       </Box>
     </Box>
 
     <Divider sx={{ margin: '.5rem -1rem' }} />
 
-    <Typography>{post.message}</Typography>
+    <Typography component="p" sx={{ overflowWrap: 'anywhere' }}>
+      {post.body}
+    </Typography>
 
     <Box sx={{ margin: '.5rem 0 -.5rem 0' }}>
       <IconButton>
