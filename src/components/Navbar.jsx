@@ -21,9 +21,11 @@ import {
   Settings,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [drawerVisibile, setDrawerVisible] = useState(false);
   const globalItems = [
     {
@@ -51,6 +53,17 @@ const Navbar = () => {
       iconElement: <Settings />,
     },
   ];
+
+  const onLogInOutClick = () => {
+    console.log(document.cookie);
+    if (auth.user) {
+      auth.signout(() => {
+        navigate('/login');
+      });
+    } else {
+      navigate('/login');
+    }
+  };
 
   const onDrawerItemClick = (path) => {
     navigate(path);
@@ -87,7 +100,9 @@ const Navbar = () => {
           >
             Social App
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button variant="outlined" color="inherit" onClick={onLogInOutClick}>
+            {auth.user ? 'Logout' : 'Login'}
+          </Button>
         </Toolbar>
       </AppBar>
 
