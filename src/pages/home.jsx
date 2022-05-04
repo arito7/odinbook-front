@@ -12,11 +12,34 @@ import {
   Typography,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Post } from '../components/Post';
 import * as Yup from 'yup';
+import axios from '../configs/axios';
+
+const usePosts = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('/posts', { withCredentials: true })
+      .then((res) => {
+        if (res.status === 200) {
+          if (res.data.success) {
+            console.log(res.data.posts);
+            setPosts(res.data.posts);
+          }
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }, []);
+
+  return posts;
+};
 
 const Home = () => {
+  const posts = usePosts();
+
   const formik = useFormik({
     initialValues: {
       body: '',
@@ -28,31 +51,22 @@ const Home = () => {
         .required('You have to say something!'),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      axios
+        .post('/posts', { body: values.body }, { withCredentials: true })
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            if (res.data.success) {
+              formik.handleReset();
+            }
+          } else {
+          }
+        });
     },
   });
-  const posts = [
-    {
-      username: 'Test Jones',
-      message: 'This is a test message',
-      date: '12/12/12',
-    },
-    {
-      username: 'Mike Testi',
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      date: '12/12/12',
-    },
-    {
-      username: 'Test Jones',
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque fermentum dui faucibus in ornare quam viverra orci sagittis.',
-      date: '12/12/12',
-    },
-  ];
 
   return (
-    <Box sx={{ display: 'grid', p: '1rem', gap: '1rem' }}>
+    <Box sx={{ display: 'grid', p: '1rem', gap: '1rem', maxWidth: '100vw' }}>
       <Paper sx={{ p: '1rem', borderRadius: '.5rem' }} elevation={1}>
         <Typography gutterBottom>What's on your mind?</Typography>
         <TextField
@@ -62,7 +76,7 @@ const Home = () => {
           onChange={formik.handleChange}
           placeholder="Something nice..."
           multiline
-          error={formik.errors.body}
+          error={!!formik.errors.body}
           helperText={formik.errors.body}
           fullWidth
           maxRows={10}
@@ -98,7 +112,7 @@ const Home = () => {
       </Box>
 
       {posts.map((p) => (
-        <Post post={p} />
+        <Post post={p} key={p._id} />
       ))}
     </Box>
   );
