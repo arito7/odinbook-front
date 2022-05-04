@@ -20,8 +20,10 @@ import {
   Person,
   Settings,
 } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [drawerVisibile, setDrawerVisible] = useState(false);
   const globalItems = [
     {
@@ -51,6 +53,11 @@ const Navbar = () => {
   const handleMenuClick = () => {
     setDrawerVisible(true);
   };
+
+  const onLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -65,7 +72,12 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            onClick={onLogoClick}
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, cursor: 'pointer' }}
+          >
             Social App
           </Typography>
           <Button color="inherit">Login</Button>
