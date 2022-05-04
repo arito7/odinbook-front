@@ -7,13 +7,30 @@ import {
   Box,
   Button,
   IconButton,
-  Input,
   Paper,
+  TextField,
   Typography,
 } from '@mui/material';
+import { useFormik } from 'formik';
+import { useState } from 'react';
 import { Post } from '../components/Post';
+import * as Yup from 'yup';
 
 const Home = () => {
+  const formik = useFormik({
+    initialValues: {
+      body: '',
+    },
+    validationSchema: Yup.object({
+      body: Yup.string()
+        .min(3, 'Post is too short.')
+        .max(500, 'Post is too long')
+        .required('You have to say something!'),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
   const posts = [
     {
       username: 'Test Jones',
@@ -33,13 +50,20 @@ const Home = () => {
       date: '12/12/12',
     },
   ];
+
   return (
     <Box sx={{ display: 'grid', p: '1rem', gap: '1rem' }}>
       <Paper sx={{ p: '1rem', borderRadius: '.5rem' }} elevation={1}>
         <Typography gutterBottom>What's on your mind?</Typography>
-        <Input
+        <TextField
+          variant="standard"
+          id="body"
+          value={formik.values.body}
+          onChange={formik.handleChange}
           placeholder="Something nice..."
           multiline
+          error={formik.errors.body}
+          helperText={formik.errors.body}
           fullWidth
           maxRows={10}
         />
@@ -57,7 +81,11 @@ const Home = () => {
           <IconButton>
             <EmojiEmotionsRounded />
           </IconButton>
-          <Button variant="contained" sx={{ justifySelf: 'end' }}>
+          <Button
+            onClick={formik.handleSubmit}
+            variant="contained"
+            sx={{ justifySelf: 'end' }}
+          >
             Post <Send sx={{ marginLeft: '.5rem' }} />
           </Button>
         </Box>
