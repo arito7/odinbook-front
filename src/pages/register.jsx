@@ -11,10 +11,14 @@ import { Google as GoogleIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/system';
 import { useFormik } from 'formik';
+import axios from '../configs/axios';
+import { LoadingButton } from '@mui/lab';
 
 const Register = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -41,7 +45,26 @@ const Register = () => {
       }),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      setLoading(true);
+      axios
+        .post('/users/register', {
+          username: values.username,
+          password: values.password,
+          rpassword: values.rpassword,
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success) {
+          } else {
+            setError(res.data.message);
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err.message);
+          setError(err.message);
+          setLoading(false);
+        });
     },
   });
 
@@ -84,6 +107,17 @@ const Register = () => {
           of other beautiful people.
         </Typography>
       </Paper>
+      {error ? (
+        <Paper
+          sx={{
+            backgroundColor: theme.palette.error.main,
+            padding: '1rem',
+            color: theme.palette.error.contrastText,
+          }}
+        >
+          <Typography sx={{ textAlign: 'center' }}>{error}</Typography>
+        </Paper>
+      ) : null}
       <TextField
         id="username"
         label="Username"
@@ -113,13 +147,14 @@ const Register = () => {
         placeholder="Repeat Password"
         type="password"
       />
-      <Button
+      <LoadingButton
+        loading={loading}
         onClick={formik.handleSubmit}
         variant="outlined"
         sx={{ padding: '.5rem' }}
       >
         Sign up
-      </Button>
+      </LoadingButton>
 
       <Divider>
         <Typography variant="body1">or</Typography>
