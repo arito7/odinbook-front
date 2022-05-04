@@ -124,16 +124,20 @@ const Register = () => {
       <Divider>
         <Typography variant="body1">or</Typography>
       </Divider>
-      <Button variant="contained" sx={{ padding: '.5rem' }}>
+
+      <Button
+        href="http://localhost:5000/login/google"
+        variant="contained"
+        sx={{ padding: '.5rem' }}
+      >
         <GoogleIcon sx={{ mr: '.5rem' }} /> Sign up with Google
       </Button>
 
       <Divider sx={{ margin: '1rem 0' }} />
 
       <Typography sx={{ textAlign: 'center' }}>
-        Already a member?
+        Already a member?{' '}
         <Link onClick={onLoginRedirect} variant="body1" underline="hover">
-          {' '}
           Login
         </Link>
       </Typography>
