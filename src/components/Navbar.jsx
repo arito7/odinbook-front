@@ -29,6 +29,7 @@ const Navbar = () => {
     {
       label: 'Home',
       iconElement: <HomeRounded />,
+      path: '/',
     },
     {
       label: 'Messages',
@@ -37,6 +38,7 @@ const Navbar = () => {
     {
       label: 'Friends',
       iconElement: <People />,
+      path: '/friends',
     },
   ];
   const accItems = [
@@ -49,6 +51,11 @@ const Navbar = () => {
       iconElement: <Settings />,
     },
   ];
+
+  const onDrawerItemClick = (path) => {
+    navigate(path);
+    setDrawerVisible(false);
+  };
 
   const handleMenuClick = () => {
     setDrawerVisible(true);
@@ -103,7 +110,11 @@ const Navbar = () => {
           <nav>
             <List sx={{ display: 'grid' }}>
               {globalItems.map((i) => (
-                <DrawerItem label={i.label} iconElement={i.iconElement} />
+                <DrawerItem
+                  label={i.label}
+                  iconElement={i.iconElement}
+                  onClick={() => onDrawerItemClick(i.path)}
+                />
               ))}
             </List>
           </nav>
@@ -111,7 +122,11 @@ const Navbar = () => {
           <nav>
             <List sx={{ display: 'grid' }}>
               {accItems.map((i) => (
-                <DrawerItem label={i.label} iconElement={i.iconElement} />
+                <DrawerItem
+                  label={i.label}
+                  iconElement={i.iconElement}
+                  onClick={() => onDrawerItemClick(i.path)}
+                />
               ))}
             </List>
           </nav>
@@ -121,9 +136,9 @@ const Navbar = () => {
   );
 };
 
-const DrawerItem = ({ label, iconElement }) => {
+const DrawerItem = ({ label, iconElement, onClick = null }) => {
   return (
-    <ListItem disablePadding>
+    <ListItem disablePadding onClick={onClick}>
       <ListItemButton>
         <ListItemIcon>{iconElement}</ListItemIcon>
         <ListItemText primary={label} />
