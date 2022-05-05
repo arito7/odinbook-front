@@ -22,8 +22,9 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { Switch } from '@mui/material';
 
-const Navbar = () => {
+const Navbar = ({ setMode, mode }) => {
   const navigate = useNavigate();
   const auth = useAuth();
   const [drawerVisibile, setDrawerVisible] = useState(false);
@@ -145,6 +146,23 @@ const Navbar = () => {
               ))}
             </List>
           </nav>
+          <Divider />
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'auto 1fr',
+              alignItems: 'center',
+              padding: '1rem',
+            }}
+          >
+            <Typography sx={{ marginRight: '1rem' }}>Dark Mode</Typography>
+            <Switch
+              defaultChecked={mode === 'dark'}
+              onChange={(e) =>
+                e.target.checked ? setMode('dark') : setMode('light')
+              }
+            />
+          </Box>
         </Box>
       </SwipeableDrawer>
     </Box>
