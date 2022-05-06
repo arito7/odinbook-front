@@ -5,23 +5,65 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/system';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
-const ENDPOINT = 'http://localhost:5000';
+import axios from '../configs/axios';
+import { LoadingButton } from '@mui/lab';
+import local from '../helpers/localStorage';
+import { useAuth } from '../contexts/AuthContext';
+import GoogleButton from '../components/GoogleButton';
 
 const Login = () => {
   const theme = useTheme();
+  const auth = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const handleRedirect = () => {
     navigate('/register');
+  };
+
+  const onGoogleSignIn = ({
+    googleId,
+    tokenId,
+    accessToken,
+    tokenObj,
+    profileObj,
+  }) => {
+    axios
+      .post('/login/google', { tokenId })
+      .then((res) => {
+        if (res.data.success) {
+          console.log(res.data);
+          local.setJwt(res.data.token);
+          auth.signin(res.data.user, () => {
+            console.log('renavigating to home');
+            navigate('/');
+          });
+        }
+      })
+      .catch((err) => setError(err.message));
+  };
+
+  const onTestAccLogin = () => {
+    axios
+      .post('/login', { username: 'tester1', password: 'tester1' })
+      .then((res) => {
+        console.log(res);
+        if (res.data.success) {
+          local.setJwt(res.data.token);
+          auth.signin(res.data.user, () => {
+            navigate('/');
+          });
+        } else {
+          setError(res.data.message);
+        }
+      })
+      .catch((err) => setError(err.message));
   };
 
   const formik = useFormik({
@@ -44,7 +86,31 @@ const Login = () => {
         .required('Password is required'),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      setLoading(true);
+      axios
+        .post('/login', {
+          username: values.username,
+          password: values.password,
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            if (res.data.success) {
+              local.set('jwt', res.data.token);
+              auth.signin(res.data.user, () => {
+                navigate('/');
+              });
+            } else {
+              setError(res.data.message);
+            }
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err.message);
+          setError(err.message);
+          setLoading(false);
+        });
     },
   });
 
@@ -92,24 +158,18 @@ const Login = () => {
         value={formik.values.password}
         onChange={formik.handleChange}
       />
-      <Button
+      <LoadingButton
+        loading={loading}
         onClick={formik.handleSubmit}
         sx={{ padding: '.5rem' }}
         variant="contained"
       >
         <Typography variant="subtitle2">Login</Typography>
-      </Button>
+      </LoadingButton>
 
       <Divider>or</Divider>
 
-      <Button
-        className="text-btn"
-        variant="contained"
-        sx={{ padding: '.5rem' }}
-      >
-        <GoogleIcon sx={{ mr: '1rem' }} />
-        <Typography variant="subtitle2">Login with Google</Typography>
-      </Button>
+      <GoogleButton text={' Login With Google'} onSuccess={onGoogleSignIn} />
 
       <Divider sx={{ margin: '1rem 0' }} />
 
@@ -122,7 +182,11 @@ const Login = () => {
 
       <Divider>or</Divider>
 
-      <Button sx={{ padding: '.5rem' }} variant="contained">
+      <Button
+        onClick={onTestAccLogin}
+        sx={{ padding: '.5rem' }}
+        variant="contained"
+      >
         <Typography variant="subtitle2">Login with a Test Account</Typography>
       </Button>
     </Box>
