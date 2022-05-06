@@ -13,9 +13,11 @@ import axios from '../configs/axios';
 import { LoadingButton } from '@mui/lab';
 import GoogleButton from '../components/GoogleButton';
 import local from '../helpers/localStorage';
+import { useAuth } from '../contexts/AuthContext';
 
 const Register = () => {
   const theme = useTheme();
+  const auth = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState(''); // Error message that appears at the top of the form used for handling response from BE
   const [loading, setLoading] = useState(false);
@@ -47,22 +49,23 @@ const Register = () => {
     onSubmit: (values) => {
       setLoading(true);
       axios
-        .post('/users/register', {
+        .post('/register', {
           username: values.username,
           password: values.password,
           rpassword: values.rpassword,
         })
         .then((res) => {
-          console.log(res.data);
           if (res.data.success) {
             local.setJwt(res.data.token);
+            auth.signin(res.data.user, () => {
+              navigate('/');
+            });
           } else {
             setError(res.data.message);
           }
           setLoading(false);
         })
         .catch((err) => {
-          console.log(err.message);
           setError(err.message);
           setLoading(false);
         });
