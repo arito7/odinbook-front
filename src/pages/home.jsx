@@ -16,29 +16,34 @@ import { useEffect, useState } from 'react';
 import { Post } from '../components/Post';
 import * as Yup from 'yup';
 import axios from '../configs/axios';
+import local from '../helpers/localStorage';
+
+// handle when user has no posts
 
 const usePosts = () => {
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
+  function update() {
     axios
-      .get('/posts', { withCredentials: true })
+      .get('/posts', { headers: { Authorization: `Bearer ${local.getJwt()}` } })
       .then((res) => {
-        if (res.status === 200) {
-          if (res.data.success) {
-            console.log(res.data.posts);
-            setPosts(res.data.posts);
-          }
+        if (res.data.success) {
+          console.log(res.data.posts);
+          setPosts(res.data.posts);
         }
       })
       .catch((err) => console.log(err.message));
+  }
+
+  useEffect(() => {
+    update();
   }, []);
 
-  return posts;
+  return [posts, update];
 };
 
 const Home = () => {
-  const posts = usePosts();
+  const [posts, updatePosts] = usePosts();
 
   const formik = useFormik({
     initialValues: {
@@ -52,16 +57,18 @@ const Home = () => {
     }),
     onSubmit: (values) => {
       axios
-        .post('/posts', { body: values.body }, { withCredentials: true })
+        .post('/posts', { body: values.body })
         .then((res) => {
-          console.log(res);
-          if (res.status === 200) {
-            if (res.data.success) {
-              formik.handleReset();
-            }
+          if (res.data.success) {
+            console.log(res.data);
+            updatePosts();
+            formik.handleReset();
           } else {
+            console.log(res.data);
+            //handle failure
           }
-        });
+        })
+        .catch((err) => console.log(err));
     },
   });
 
