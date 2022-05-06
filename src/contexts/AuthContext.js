@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import Axios from 'axios';
-
-const axios = Axios.default;
+import axios from '../configs/axios';
+import local from '../helpers/localStorage';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -13,6 +12,7 @@ export function AuthProvider({ children }) {
   };
 
   const signout = (cb) => {
+    local.delJwt();
     setUser(null);
     cb();
   };
@@ -30,20 +30,20 @@ export function useAuth() {
 
 export function RequireAuth({ children }) {
   const auth = useAuth();
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (!auth.user) {
-    axios
-      .get(`http://localhost:5000/users/me`, { withCredentials: true })
-      .then((res) => {
-        auth.signin(res.data.user, () => {
-          navigate('/');
-        });
-      })
-      .catch((err) => {
-        console.log(err.message);
+    const jwt = local.getJwt();
+    if (jwt) {
+      axios.get('/users/me').then((res) => {
+        if (res.data.success) {
+          auth.signin(res.data.user, () => {
+            navigate('/');
+          });
+        }
       });
+    }
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
