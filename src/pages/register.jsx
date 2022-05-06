@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import * as Yup from 'yup';
-import { Google as GoogleIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/system';
 import { useFormik } from 'formik';
 import axios from '../configs/axios';
 import { LoadingButton } from '@mui/lab';
+import GoogleButton from '../components/GoogleButton';
+import local from '../helpers/localStorage';
 
 const Register = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const [error, setError] = useState(''); // Error message that appears at the top of the form used for handling response from BE
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
@@ -55,6 +55,7 @@ const Register = () => {
         .then((res) => {
           console.log(res.data);
           if (res.data.success) {
+            local.setJwt(res.data.token);
           } else {
             setError(res.data.message);
           }
@@ -67,6 +68,30 @@ const Register = () => {
         });
     },
   });
+
+  const onGoogleSignUp = ({
+    googleId,
+    tokenId,
+    accessToken,
+    tokenObj,
+    profileObj,
+  }) => {
+    axios
+      .post('/register/google', { tokenId, profileObj })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.success) {
+          local.setJwt(res.data.token);
+          navigate('/');
+        } else {
+          setError(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setError(err.message);
+      });
+  };
 
   const onLoginRedirect = () => {
     navigate('/login');
@@ -160,13 +185,7 @@ const Register = () => {
         <Typography variant="body1">or</Typography>
       </Divider>
 
-      <Button
-        href="http://localhost:5000/login/google"
-        variant="contained"
-        sx={{ padding: '.5rem' }}
-      >
-        <GoogleIcon sx={{ mr: '.5rem' }} /> Sign up with Google
-      </Button>
+      <GoogleButton text={' Sign up with Google'} onSuccess={onGoogleSignUp} />
 
       <Divider sx={{ margin: '1rem 0' }} />
 
