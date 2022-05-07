@@ -96,10 +96,10 @@ const Home = () => {
             gridTemplateColumns: 'auto auto 1fr',
           }}
         >
-          <IconButton>
+          <IconButton color="secondary">
             <ImageIcon />
           </IconButton>
-          <IconButton>
+          <IconButton color="secondary">
             <EmojiEmotionsRounded />
           </IconButton>
           <Button
