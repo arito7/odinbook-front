@@ -12,39 +12,61 @@ import {
   Typography,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
 import { Post } from '../components/Post';
 import * as Yup from 'yup';
 import axios from '../configs/axios';
-import local from '../helpers/localStorage';
+import { usePosts } from '../hooks/usePosts';
 
-// handle when user has no posts
-
-const usePosts = () => {
-  const [posts, setPosts] = useState([]);
-
-  function update() {
-    axios
-      .get('/posts', { headers: { Authorization: `Bearer ${local.getJwt()}` } })
-      .then((res) => {
-        if (res.data.success) {
-          console.log(res.data.posts);
-          setPosts(res.data.posts);
-        }
-      })
-      .catch((err) => console.log(err.message));
-  }
-
-  useEffect(() => {
-    update();
-  }, []);
-
-  return [posts, update];
-};
+// refactored out posts and postform components to
+// prevent excessive render loads.
+// prevent an entire page render for every key input
+// by delegating the post input to its own component.
 
 const Home = () => {
   const [posts, updatePosts] = usePosts();
 
+  const onSubmitPost = (values, formReset) => {
+    axios
+      .post('/posts', { body: values.body })
+      .then((res) => {
+        if (res.data.success) {
+          console.log(res.data);
+          formReset();
+          updatePosts();
+        } else {
+          console.log(res.data);
+          //handle failure
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  return (
+    <Box sx={{ display: 'grid', p: '1rem', gap: '1rem', maxWidth: '100vw' }}>
+      {console.log('rendering home page')}
+      <PostInput onSubmit={onSubmitPost} />
+      <Box>
+        <Typography variant="h5" sx={{ marginTop: '.5rem' }}>
+          Posts
+        </Typography>
+      </Box>
+      <Posts posts={posts} />
+    </Box>
+  );
+};
+
+const Posts = ({ posts }) => {
+  return (
+    <>
+      {console.log('rendering posts')}
+      {posts.map((p) => (
+        <Post post={p} key={p._id} />
+      ))}
+    </>
+  );
+};
+
+const PostInput = ({ onSubmit }) => {
   const formik = useFormik({
     initialValues: {
       body: '',
@@ -56,72 +78,47 @@ const Home = () => {
         .required('You have to say something!'),
     }),
     onSubmit: (values) => {
-      axios
-        .post('/posts', { body: values.body })
-        .then((res) => {
-          if (res.data.success) {
-            console.log(res.data);
-            updatePosts();
-            formik.handleReset();
-          } else {
-            console.log(res.data);
-            //handle failure
-          }
-        })
-        .catch((err) => console.log(err));
+      onSubmit(values, formik.handleReset);
     },
   });
-
   return (
-    <Box sx={{ display: 'grid', p: '1rem', gap: '1rem', maxWidth: '100vw' }}>
-      <Paper sx={{ p: '1rem', borderRadius: '.5rem' }} elevation={1}>
-        <Typography gutterBottom>What's on your mind?</Typography>
-        <TextField
-          variant="standard"
-          id="body"
-          value={formik.values.body}
-          onChange={formik.handleChange}
-          placeholder="Something nice..."
-          multiline
-          error={!!formik.errors.body}
-          helperText={formik.errors.body}
-          fullWidth
-          maxRows={10}
-        />
-        <Box
-          sx={{
-            marginBottom: '-.5rem',
-            marginTop: '.5rem',
-            display: 'grid',
-            gridTemplateColumns: 'auto auto 1fr',
-          }}
+    <Paper sx={{ p: '1rem', borderRadius: '.5rem' }} elevation={1}>
+      <Typography gutterBottom>What's on your mind?</Typography>
+      <TextField
+        variant="standard"
+        id="body"
+        value={formik.values.body}
+        onChange={formik.handleChange}
+        placeholder="Something nice..."
+        multiline
+        error={!!formik.errors.body}
+        helperText={formik.errors.body}
+        fullWidth
+        maxRows={10}
+      />
+      <Box
+        sx={{
+          marginBottom: '-.5rem',
+          marginTop: '.5rem',
+          display: 'grid',
+          gridTemplateColumns: 'auto auto 1fr',
+        }}
+      >
+        <IconButton color="secondary">
+          <ImageIcon />
+        </IconButton>
+        <IconButton color="secondary">
+          <EmojiEmotionsRounded />
+        </IconButton>
+        <Button
+          onClick={formik.handleSubmit}
+          variant="contained"
+          sx={{ justifySelf: 'end' }}
         >
-          <IconButton color="secondary">
-            <ImageIcon />
-          </IconButton>
-          <IconButton color="secondary">
-            <EmojiEmotionsRounded />
-          </IconButton>
-          <Button
-            onClick={formik.handleSubmit}
-            variant="contained"
-            sx={{ justifySelf: 'end' }}
-          >
-            Post <Send sx={{ marginLeft: '.5rem' }} />
-          </Button>
-        </Box>
-      </Paper>
-
-      <Box>
-        <Typography variant="h5" sx={{ marginTop: '.5rem' }}>
-          Posts
-        </Typography>
+          Post <Send sx={{ marginLeft: '.5rem' }} />
+        </Button>
       </Box>
-
-      {posts.map((p) => (
-        <Post post={p} key={p._id} />
-      ))}
-    </Box>
+    </Paper>
   );
 };
 
