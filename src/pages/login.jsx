@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
@@ -26,6 +26,17 @@ const Login = () => {
   const handleRedirect = () => {
     navigate('/register');
   };
+
+  useEffect(() => {
+    axios.get('/users/me').then((res) => {
+      if (res.data.success && res.data.user) {
+        console.log(res.data);
+        auth.signin(res.data.user, () => {
+          navigate('/');
+        });
+      }
+    });
+  }, []);
 
   const onGoogleSignIn = ({
     googleId,
