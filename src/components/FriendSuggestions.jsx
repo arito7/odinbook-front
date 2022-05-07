@@ -24,6 +24,7 @@ const FriendSuggestions = () => {
       })
       .catch((err) => console.log(err.message));
   };
+
   return (
     <Paper elevation={1} sx={{ margin: '1rem' }}>
       <Typography

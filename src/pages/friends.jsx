@@ -5,10 +5,6 @@ import FriendSuggestions from '../components/FriendSuggestions';
 import { FriendRequests } from '../components/FriendRequests';
 import { FriendsList } from '../components/FriendsList';
 
-export const friendsSet = [
-  { username: 'Beast Fiend', icon: '/images/man.png' },
-];
-
 const Friends = () => {
   return (
     <Box>

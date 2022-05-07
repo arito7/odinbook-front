@@ -11,9 +11,10 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import { friendsSet } from '../pages/friends';
+import { useAuth } from '../contexts/AuthContext';
 
 export const FriendsList = () => {
+  const auth = useAuth();
   return (
     <Paper elevation={1} sx={{ margin: '1rem' }}>
       <Typography variant="h5" gutterBottom sx={{ padding: '1rem 0 0 1rem' }}>
@@ -21,7 +22,7 @@ export const FriendsList = () => {
       </Typography>
       <Divider />
       <List>
-        {friendsSet.map((friend) => (
+        {auth.user.friends.map((friend) => (
           <ListItem
             secondaryAction={
               <IconButton color="secondary">

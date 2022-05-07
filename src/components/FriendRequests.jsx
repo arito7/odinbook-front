@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
  */
 export const FriendRequests = () => {
   const auth = useAuth();
+
   return (
     <Paper elevation={1} sx={{ padding: '1rem', margin: '1rem' }}>
       <Typography variant="h5" gutterBottom>
