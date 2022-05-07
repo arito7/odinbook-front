@@ -30,20 +30,9 @@ export function useAuth() {
 
 export function RequireAuth({ children }) {
   const auth = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
 
   if (!auth.user) {
-    const jwt = local.getJwt();
-    if (jwt) {
-      axios.get('/users/me').then((res) => {
-        if (res.data.success) {
-          auth.signin(res.data.user, () => {
-            navigate('/');
-          });
-        }
-      });
-    }
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
