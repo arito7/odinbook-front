@@ -127,6 +127,7 @@ const Navbar = ({ setMode, mode }) => {
             <List sx={{ display: 'grid' }}>
               {globalItems.map((i) => (
                 <DrawerItem
+                  key={i.label}
                   label={i.label}
                   iconElement={i.iconElement}
                   onClick={() => onDrawerItemClick(i.path)}
@@ -139,6 +140,7 @@ const Navbar = ({ setMode, mode }) => {
             <List sx={{ display: 'grid' }}>
               {accItems.map((i) => (
                 <DrawerItem
+                  key={i.label}
                   label={i.label}
                   iconElement={i.iconElement}
                   onClick={() => onDrawerItemClick(i.path)}
