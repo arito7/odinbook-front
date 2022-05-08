@@ -10,17 +10,27 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import axios from '../configs/axios';
+import { useSnackbar } from '../contexts/SnackbarContext';
 import usePeople from '../hooks/usePeople';
 
 const FriendSuggestions = () => {
-  const people = usePeople();
+  const [people, updatePeople] = usePeople();
+  const [disableAddButton, setDisableAddButton] = useState(false);
+  const snackbar = useSnackbar();
+
   const onFriendAdd = (person) => {
+    setDisableAddButton(true);
     axios
-      .post('/users/request', { to: person._id })
+      .post('/users/requests', { to: person._id })
       .then((res) => {
         console.log(res.data);
+        if (res.data.success) {
+          snackbar.show('Friend request sent!');
+          updatePeople();
+          setDisableAddButton(false);
+        }
       })
       .catch((err) => console.log(err.message));
   };
@@ -42,6 +52,7 @@ const FriendSuggestions = () => {
             secondaryAction={
               <IconButton
                 color="secondary"
+                disabled={disableAddButton}
                 onClick={() => {
                   onFriendAdd(person);
                 }}
