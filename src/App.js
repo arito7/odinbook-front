@@ -11,6 +11,7 @@ import Register from './pages/register';
 import Home from './pages/home';
 import Friends from './pages/friends';
 import { AuthProvider, RequireAuth } from './contexts/AuthContext';
+import { SnackbarProvider } from './contexts/SnackbarContext';
 
 const getDesignTokens = (mode) => ({
   typography: {
@@ -76,11 +77,13 @@ const Layout = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box>
-        <Navbar setMode={setMode} mode={mode} />
-        <Outlet />
-      </Box>
+      <SnackbarProvider>
+        <CssBaseline />
+        <Box>
+          <Navbar setMode={setMode} mode={mode} />
+          <Outlet />
+        </Box>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 };
