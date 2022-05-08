@@ -30,9 +30,16 @@ const FriendSuggestions = () => {
           snackbar.show('Friend request sent!');
           updatePeople();
           setDisableAddButton(false);
+        } else {
+          if (res.data.message === 'There is a preexisting request') {
+            snackbar.show('You already have a pending request!', 'error');
+            setDisableAddButton(false);
+          }
         }
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        snackbar.show(err.message, 'error');
+      });
   };
 
   return (
