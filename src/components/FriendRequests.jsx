@@ -16,24 +16,47 @@ import {
   Tooltip,
 } from '@mui/material';
 import React from 'react';
+import axios from '../configs/axios';
+import { useSnackbar } from '../contexts/SnackbarContext';
 import { useFriendRequests } from '../hooks/useFriendRequests';
 
 export const FriendRequests = () => {
+  const snackbar = useSnackbar();
   const [requests, pendingRequests] = useFriendRequests();
 
+  const onAcceptRequest = (requester) => {
+    axios
+      .post('/users/requests/accept', { from: requester._id })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.success) {
+          snackbar.show(`${requester.username} is now your friend!`);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  const onDeclineRequest = (requster) => {};
+
   return (
-    <Paper elevation={1} sx={{ padding: '1rem', margin: '1rem' }}>
-      <Typography variant="h6" gutterBottom>
+    <Paper elevation={1} sx={{ margin: '1rem' }}>
+      <Typography variant="h6" gutterBottom sx={{ padding: '1rem 0 0 1rem' }}>
         Friend Requests
       </Typography>
-      <Divider sx={{ margin: '.5rem -1rem' }} />
+      <Divider sx={{ margin: '.5rem 0' }} />
       {requests.length ? (
         <List>
-          {requests.map((req) => (
+          {requests.map(({ from }) => (
             <ListItem
-              key={req.from._id}
+              key={from._id}
               secondaryAction={
-                <Button color="success" variant="outlined">
+                <Button
+                  color="success"
+                  variant="outlined"
+                  onClick={() => {
+                    onAcceptRequest(from);
+                  }}
+                >
                   Accept
                 </Button>
               }
@@ -46,14 +69,17 @@ export const FriendRequests = () => {
                     paddingLeft: 0,
                     marginLeft: '-.5rem',
                   }}
+                  onClick={() => {
+                    onDeclineRequest(from);
+                  }}
                 >
                   <Delete />
                 </IconButton>
               </Tooltip>
               <ListItemAvatar>
-                <Avatar src={req.iconUrl || '/images/man.png'} />
+                <Avatar src={from.iconUrl || '/images/man.png'} />
               </ListItemAvatar>
-              <ListItemText primary={req.from.username} />
+              <ListItemText primary={from.username} />
             </ListItem>
           ))}
         </List>
@@ -65,11 +91,15 @@ export const FriendRequests = () => {
 
       {pendingRequests.length ? (
         <>
-          <Typography variant="h6" gutterBottom sx={{ marginTop: '1rem' }}>
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{ marginTop: '1rem', padding: '1rem 0 0 1rem' }}
+          >
             Pending Requests
           </Typography>
 
-          <Divider sx={{ margin: '.5rem -1rem' }} />
+          <Divider sx={{ margin: '.5rem 0' }} />
           <List>
             {pendingRequests.map((request) => (
               <ListItem key={request.to._id}>
