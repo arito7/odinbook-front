@@ -4,7 +4,7 @@ import axios from '../configs/axios';
 export default function usePeople() {
   const [people, setPeople] = useState([]);
 
-  useEffect(() => {
+  const update = () => {
     axios
       .get('/users/people')
       .then((res) => {
@@ -13,7 +13,10 @@ export default function usePeople() {
         }
       })
       .catch((err) => console.log(err.message));
+  };
+  useEffect(() => {
+    update();
   }, []);
 
-  return people;
+  return [people, update];
 }
