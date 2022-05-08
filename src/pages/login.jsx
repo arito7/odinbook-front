@@ -38,13 +38,7 @@ const Login = () => {
     });
   }, []);
 
-  const onGoogleSignIn = ({
-    googleId,
-    tokenId,
-    accessToken,
-    tokenObj,
-    profileObj,
-  }) => {
+  const onGoogleSignIn = ({ tokenId }) => {
     axios
       .post('/login/google', { tokenId })
       .then((res) => {
