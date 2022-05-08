@@ -13,6 +13,11 @@ export function SnackbarProvider({ children }) {
     setOpen(false);
   };
 
+  /**
+   * A shorthand function to set message, severity and show alert at once
+   * @param {*} message
+   * @param {'error'|'warning'|'info'|'success'} severity
+   */
   const show = (
     message = 'You need to set a message',
     severity = 'success'
