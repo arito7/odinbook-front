@@ -1,14 +1,19 @@
+import { Delete } from '@mui/icons-material';
 import {
   Avatar,
   Box,
   Button,
   Divider,
+  IconButton,
   List,
   ListItem,
+  ListItemIcon,
   ListItemAvatar,
   ListItemText,
   Paper,
   Typography,
+  ListItemButton,
+  Tooltip,
 } from '@mui/material';
 import React from 'react';
 import { useFriendRequests } from '../hooks/useFriendRequests';
@@ -23,36 +28,35 @@ export const FriendRequests = () => {
       </Typography>
       <Divider sx={{ margin: '.5rem -1rem' }} />
       {requests.length ? (
-        <>
+        <List>
           {requests.map((req) => (
-            <Box
-              key={req._id}
-              sx={{
-                display: 'grid',
-                gap: '.5rem',
-                gridTemplateColumns: 'auto 1fr',
-                alignItems: 'center',
-              }}
+            <ListItem
+              key={req.from._id}
+              secondaryAction={
+                <Button color="success" variant="outlined">
+                  Accept
+                </Button>
+              }
             >
-              <Avatar src={req.iconUrl || '/images/man.png'} />
-              <Box>
-                <Typography gutterBottom>{req.username}</Typography>
-                <Box>
-                  <Button
-                    size="small"
-                    sx={{ marginRight: '.5rem' }}
-                    variant="contained"
-                  >
-                    Confirm
-                  </Button>
-                  <Button size="small" variant="outlined" color="error">
-                    Decline
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
+              <Tooltip title="Decline">
+                <IconButton
+                  color="error"
+                  sx={{
+                    marginRight: '.5rem',
+                    paddingLeft: 0,
+                    marginLeft: '-.5rem',
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              </Tooltip>
+              <ListItemAvatar>
+                <Avatar src={req.iconUrl || '/images/man.png'} />
+              </ListItemAvatar>
+              <ListItemText primary={req.from.username} />
+            </ListItem>
           ))}
-        </>
+        </List>
       ) : (
         <Typography sx={{ textAlign: 'center', paddingTop: '1rem' }}>
           You don't have any friend requests yet :(
