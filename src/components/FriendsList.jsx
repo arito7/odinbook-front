@@ -21,22 +21,29 @@ export const FriendsList = () => {
         Friends
       </Typography>
       <Divider />
-      <List>
-        {auth.user.friends.map((friend) => (
-          <ListItem
-            secondaryAction={
-              <IconButton color="secondary">
-                <MessageRounded />
-              </IconButton>
-            }
-          >
-            <ListItemAvatar>
-              <Avatar src={friend.icon} />
-            </ListItemAvatar>
-            <ListItemText primary={friend.username} />
-          </ListItem>
-        ))}
-      </List>
+      {auth.user.friends.length ? (
+        <List>
+          {auth.user.friends.map((friend) => (
+            <ListItem
+              key={friend._id}
+              secondaryAction={
+                <IconButton color="secondary">
+                  <MessageRounded />
+                </IconButton>
+              }
+            >
+              <ListItemAvatar>
+                <Avatar src={friend.icon} />
+              </ListItemAvatar>
+              <ListItemText primary={friend.username} />
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <Typography sx={{ textAlign: 'center', padding: '1rem' }}>
+          You don't have any friends yet :(
+        </Typography>
+      )}
     </Paper>
   );
 };
