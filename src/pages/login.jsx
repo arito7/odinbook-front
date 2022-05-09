@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { Google as GoogleIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/system';
 import { useFormik } from 'formik';
@@ -122,10 +121,11 @@ const Login = () => {
   return (
     <Box
       sx={{
+        display: 'grid',
         justifyContent: 'center',
         alignItems: 'center',
-        display: 'grid',
         gap: '1rem',
+        padding: '1rem',
       }}
     >
       <Typography variant="h4" sx={{ textAlign: 'center', margin: '1rem' }}>
