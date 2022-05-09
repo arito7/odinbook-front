@@ -15,6 +15,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Divider from '@mui/material/Divider';
 import {
   HomeRounded,
+  LightMode,
+  Nightlight,
   MessageRounded,
   People,
   Person,
@@ -149,22 +151,22 @@ const Navbar = ({ setMode, mode }) => {
             </List>
           </nav>
           <Divider />
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'auto 1fr',
-              alignItems: 'center',
-              padding: '1rem',
-            }}
-          >
-            <Typography sx={{ marginRight: '1rem' }}>Dark Mode</Typography>
-            <Switch
-              defaultChecked={mode === 'dark'}
-              onChange={(e) =>
-                e.target.checked ? setMode('dark') : setMode('light')
-              }
-            />
-          </Box>
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                {mode === 'dark' ? <Nightlight /> : <LightMode />}
+              </ListItemIcon>
+              <ListItemText
+                primary={mode === 'dark' ? 'Dark Theme' : 'Light Theme'}
+              />
+              <Switch
+                defaultChecked={mode === 'dark'}
+                onChange={(e) =>
+                  e.target.checked ? setMode('dark') : setMode('light')
+                }
+              />
+            </ListItem>
+          </List>
         </Box>
       </SwipeableDrawer>
     </Box>
