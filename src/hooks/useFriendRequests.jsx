@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import axios from '../configs/axios';
 
 /**
- * handle no friends
- * handle no requests
+ * @returns [requests, pendingRequests, updateRequests]
  */
-export const useFriendRequests = () => {
+export default function useFriendRequests() {
   const [requests, setRequests] = useState([]);
   const [pendingRequests, setPendingRequests] = useState([]);
 
-  useEffect(() => {
+  function updateRequests() {
     axios
       .get('/users/requests')
       .then((res) => {
@@ -20,7 +19,11 @@ export const useFriendRequests = () => {
         }
       })
       .catch((err) => console.log(err.message));
+  }
+
+  useEffect(() => {
+    updateRequests();
   }, []);
 
-  return [requests, pendingRequests];
-};
+  return [requests, pendingRequests, updateRequests];
+}
