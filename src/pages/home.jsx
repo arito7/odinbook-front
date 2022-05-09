@@ -15,7 +15,7 @@ import { useFormik } from 'formik';
 import { Post } from '../components/Post';
 import * as Yup from 'yup';
 import axios from '../configs/axios';
-import { usePosts } from '../hooks/usePosts';
+import { useData } from '../contexts/DataContext';
 
 // refactored out posts and postform components to
 // prevent excessive render loads.
@@ -23,7 +23,7 @@ import { usePosts } from '../hooks/usePosts';
 // by delegating the post input to its own component.
 
 const Home = () => {
-  const [posts, updatePosts] = usePosts();
+  const data = useData();
 
   const onSubmitPost = (values, formReset) => {
     axios
@@ -32,7 +32,7 @@ const Home = () => {
         if (res.data.success) {
           console.log(res.data);
           formReset();
-          updatePosts();
+          data.updatePosts();
         } else {
           console.log(res.data);
           //handle failure
@@ -50,7 +50,7 @@ const Home = () => {
           Posts
         </Typography>
       </Box>
-      <Posts posts={posts} />
+      <Posts posts={data.posts} />
     </Box>
   );
 };

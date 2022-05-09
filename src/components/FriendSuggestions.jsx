@@ -12,13 +12,13 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import axios from '../configs/axios';
+import { useData } from '../contexts/DataContext';
 import { useSnackbar } from '../contexts/SnackbarContext';
-import usePeople from '../hooks/usePeople';
 
 const FriendSuggestions = () => {
-  const [people, updatePeople] = usePeople();
   const [disableAddButton, setDisableAddButton] = useState(false);
   const snackbar = useSnackbar();
+  const data = useData();
 
   const onFriendAdd = (person) => {
     setDisableAddButton(true);
@@ -28,7 +28,8 @@ const FriendSuggestions = () => {
         console.log(res.data);
         if (res.data.success) {
           snackbar.show('Friend request sent!');
-          updatePeople();
+          data.updatePeople();
+          data.updateRequests();
           setDisableAddButton(false);
         } else {
           if (res.data.message === 'There is a preexisting request') {
@@ -53,7 +54,7 @@ const FriendSuggestions = () => {
       </Typography>
       <Divider />
       <List sx={{ display: 'grid' }}>
-        {people.map((person) => (
+        {data.people.map((person) => (
           <ListItem
             key={person._id}
             secondaryAction={
@@ -69,7 +70,7 @@ const FriendSuggestions = () => {
             }
           >
             <ListItemAvatar>
-              <Avatar src={person.iconUri} />
+              <Avatar src={person.iconUrl} />
             </ListItemAvatar>
             <ListItemText primary={person.username} />
           </ListItem>

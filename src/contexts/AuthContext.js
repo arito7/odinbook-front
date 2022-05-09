@@ -7,6 +7,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   const signin = (user, cb) => {
+    console.log(user);
     setUser(user);
     cb();
   };

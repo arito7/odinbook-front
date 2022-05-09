@@ -1,28 +1,25 @@
 import { Delete } from '@mui/icons-material';
 import {
   Avatar,
-  Box,
   Button,
   Divider,
   IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemAvatar,
   ListItemText,
   Paper,
   Typography,
-  ListItemButton,
   Tooltip,
 } from '@mui/material';
 import React from 'react';
 import axios from '../configs/axios';
 import { useSnackbar } from '../contexts/SnackbarContext';
-import { useFriendRequests } from '../hooks/useFriendRequests';
+import { useData } from '../contexts/DataContext';
 
 export const FriendRequests = () => {
   const snackbar = useSnackbar();
-  const [requests, pendingRequests] = useFriendRequests();
+  const data = useData();
 
   const onAcceptRequest = (requester) => {
     axios
@@ -44,9 +41,9 @@ export const FriendRequests = () => {
         Friend Requests
       </Typography>
       <Divider sx={{ margin: '.5rem 0' }} />
-      {requests.length ? (
+      {data.requests.length ? (
         <List>
-          {requests.map(({ from }) => (
+          {data.requests.map(({ from }) => (
             <ListItem
               key={from._id}
               secondaryAction={
@@ -89,7 +86,7 @@ export const FriendRequests = () => {
         </Typography>
       )}
 
-      {pendingRequests.length ? (
+      {data.pendingRequests.length ? (
         <>
           <Typography
             variant="h6"
@@ -100,8 +97,8 @@ export const FriendRequests = () => {
           </Typography>
 
           <Divider sx={{ margin: '.5rem 0' }} />
-          <List>
-            {pendingRequests.map((request) => (
+          <List sx={{ display: 'grid' }}>
+            {data.pendingRequests.map((request) => (
               <ListItem key={request.to._id}>
                 <ListItemAvatar>
                   <Avatar src={request.to.iconUrl || '/images/man.png'} />
