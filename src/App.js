@@ -72,7 +72,7 @@ function App() {
 }
 
 const Layout = () => {
-  const [mode, setMode] = React.useState('light');
+  const [mode, setMode] = React.useState('dark');
 
   const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
