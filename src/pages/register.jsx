@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
+import { Container } from '@mui/material';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/system';
@@ -72,13 +72,7 @@ const Register = () => {
     },
   });
 
-  const onGoogleSignUp = ({
-    googleId,
-    tokenId,
-    accessToken,
-    tokenObj,
-    profileObj,
-  }) => {
+  const onGoogleSignUp = ({ tokenId, profileObj }) => {
     axios
       .post('/register/google', { tokenId, profileObj })
       .then((res) => {
@@ -101,13 +95,11 @@ const Register = () => {
   };
 
   return (
-    <Box
+    <Container
       sx={{
         display: 'grid',
-        justifyContent: 'center',
-        padding: '1rem',
-        alignItems: 'center',
         gap: '1rem',
+        padding: '1rem',
       }}
     >
       <Typography sx={{ textAlign: 'center' }} variant="h4">
@@ -198,7 +190,7 @@ const Register = () => {
           Login
         </Link>
       </Typography>
-    </Box>
+    </Container>
   );
 };
 
