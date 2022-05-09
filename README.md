@@ -1,6 +1,6 @@
 ## Social App Clone
 
-Created using react with MUI
+Created using react with MUI & ReactRouter
 
 ### Features
 
