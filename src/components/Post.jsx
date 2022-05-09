@@ -24,7 +24,7 @@ export const Post = ({ post }) => (
         marginTop: '-.5rem',
       }}
     >
-      <Avatar alt="Test icon" src="/images/man.png" />
+      <Avatar alt="Profile Icon" src={post.creator.iconUrl} />
       <Box sx={{ display: 'grid', alignItems: 'center' }}>
         <Typography>{post.creator.username}</Typography>
         <Typography variant="subtitle2" color="grey">
