@@ -25,7 +25,6 @@ export const FriendRequests = () => {
     axios
       .post('/users/requests/accept', { from: requester._id })
       .then((res) => {
-        console.log(res.data);
         if (res.data.success) {
           snackbar.show(`${requester.username} is now your friend!`);
         }
